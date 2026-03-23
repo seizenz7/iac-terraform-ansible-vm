@@ -21,7 +21,36 @@ flowchart LR
     D --> E[Deploy Flask Container]
 ```
 
+## Prerequisites
+Sebelum memulai, pastikan alat berikut sudah terinstal di komputer Anda:
+
+- Terraform versi 1.5 atau lebih baru
+- VirtualBox versi 7.x atau lebih baru (with ubuntu server 20.04 LTS)
+- Git
+- Ansible (akan digunakan di Milestone 2)
+
+## Installation & Setup
+```bash
+1. Instalasi VirtualBox
+# Windows: Unduh dari https://www.virtualbox.org/wiki/Downloads
+# Linux (Ubuntu/Debian):
+sudo apt update && sudo apt install virtualbox -y
+2. Instalasi Terraform
+Windows: Unduh dari https://developer.hashicorp.com/terraform/downloads
+# Linux (Ubuntu/Debian):
+sudo apt update && sudo apt install terraform -y
+3. Setup Repositori
+git clone https://github.com/seizenz7/iac-terraform-ansible-vm.git
+cd iac-terraform-ansible-vm
+mkdir -p terraform ansible
+4. Verifikasi Instalasi
+terraform version
+VBoxManage --version
+ansible --version
+```
+
 ---
+
 ## Milestone 1 - Terraform VM Provisioning
 
 - Definisi resource VM dengan provider VirtualBox
@@ -40,8 +69,8 @@ VM muncul di VirtualBox Manager
 
 ### Challenges & Learnings
 
-Challenge: ...
-Learning: ...
+- Challenge: ...
+- Learning: ...
 
 ---
 
@@ -62,8 +91,8 @@ Container berjalan di VM
 
 ### Challenges & Learnings
 
-Challenge: ...
-Learning: ...
+- Challenge: ...
+- Learning: ...
 
 ---
 
@@ -85,8 +114,8 @@ Aplikasi Flask dapat diakses
 
 ### Challenges & Learnings
 
-Challenge: ...
-Learning: ...
+- Challenge: ...
+- Learning: ...
 
 ---
 ## ***Key Takeaway Keseluruhan Project 2***

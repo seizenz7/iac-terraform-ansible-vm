@@ -12,7 +12,7 @@ Tujuan: mensimulasikan infrastruktur on-prem/hybrid yang reproducible dan versio
 - OS: Ubuntu 20.04 LTS
 - Documentation: Markdown + Mermaid
 
-## Architecture Diagram
+## Flowchart Diagram
 ```mermaid
 flowchart LR
     A[Terraform] --> B[VirtualBox VM]

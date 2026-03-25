@@ -5,7 +5,11 @@ Project ini mengotomatisasi provisioning VM Linux menggunakan Terraform sebagai 
 Tujuan: mensimulasikan infrastruktur on-prem/hybrid yang reproducible dan version-controlled hanya dengan beberapa perintah.
 
 ## Tech Stack
-
+- **Terraform** (IaC provisioning VM di VirtualBox)
+- **Ansible** (configuration management + Docker deployment)
+- **VirtualBox** (hypervisor lokal gratis)
+- **Docker** (container Flask)
+- **WSL2 + Windows 11** (environment testing)
 
 ## Flowchart Diagram
 ```mermaid
@@ -17,8 +21,13 @@ flowchart
 ```
 
 ## Prerequisites
+- Windows 11 + WSL2 (Ubuntu 22.04 atau terbaru)
+- VirtualBox terinstal di Windows host (bukan di WSL)
+- Terraform & Ansible terinstal di WSL2
+- Clone GitHub repo 
+- Minimal 4 GB RAM & 20 GB disk kosong
 
-
+---
 ## Milestone 1 
 
 

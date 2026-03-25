@@ -9,7 +9,7 @@ Tujuan: mensimulasikan infrastruktur on-prem/hybrid yang reproducible dan versio
 
 ## Flowchart Diagram
 ```mermaid
-flowchart L
+flowchart 
     A[Terraform] --> B[VirtualBox VM]
     B --> C[Ansible Playbook]
     C --> D[Install Docker]

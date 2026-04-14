@@ -22,6 +22,7 @@ flowchart LR
 ```
 
 ## Prerequisites
+WSL2 terinstall dan aktif
 Akun KodeKloud Business Plan (untuk AWS)
 Terraform CLI terinstal di WSL2/Windows
 Ansible terinstal di WSL2
@@ -30,7 +31,40 @@ GitHub repo ini sudah di-clone
 ---
 ## Milestone 1: Provision EC2 via Terraform
 
-### Steps
+### Steps 1 - Launch KodeKloud AWS Playground & Ambil Credentials
+- Buka browser dan login ke KodeKloud
+- Launch AWS Playground
+- Ambil kredensial AWS melalui cloudshell aws
+  
+  Verifikasi siapa yang login `aws sts get-caller-identity`
+  
+  Ambil temporary credentials`curl -s -H "Authorization: $AWS_CONTAINER_AUTHORIZATION_TOKEN" "$AWS_CONTAINER_CREDENTIALS_FULL_URI" | jq .`
+  
+- Simpan di notepad
+
+### Steps 2 - Siapkan Terraform & Konfigurasi Provider AWS dengan Temporary Credentials
+- Buat repo di github (iac-terraform-ansible-vm) dan clone repo `git clone ....`
+- Masuk ke folder repo dan Buat folder terraform `mkdir terraform`
+- Masuk ke folder terraform `cd terraform`
+- Export kredensial temporary AWS ke env WSL
+
+  `export AWS_ACCESS_KEY_ID=""`
+
+  `export AWS_SECRET_ACCESS_KEY=""`
+
+  `export AWS_SESSION_TOKEN=""`
+
+  `export AWS_REGION=""`
+
+- Buat file [provider.tf]()
+- Buat file [variables.tf]()
+- Buat file [main.tf]()
+- Jalankan perintah terraform
+
+  `terraform init`
+  `terraform validate`
+  `terraform plan`
+  `terraform apply -auto-approve`
 
 ### Screenshots (Terraform)
 
@@ -83,4 +117,4 @@ Milestone 4: Documentation & Evidence
 
 ---
 ## ***Key Takeaway Keseluruhan Project 2***
-Project ini mengubah proses provisioning manual menjadi infrastruktur yang sepenuhnya deklaratif dan otomatis.
+

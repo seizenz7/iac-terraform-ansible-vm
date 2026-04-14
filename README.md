@@ -1,35 +1,36 @@
 # IaC Terraform + Ansible VM Provisioning
 
 ## Overview
-Project ini mengotomatisasi provisioning VM Linux menggunakan Terraform sebagai Infrastructure as Code dan Ansible untuk konfigurasi serta deployment Docker. 
-Tujuan: mensimulasikan infrastruktur on-prem/hybrid yang reproducible dan version-controlled hanya dengan beberapa perintah.
+Proyek ini mengotomatisasi provisioning VM Ubuntu di AWS menggunakan **Terraform** (Infrastructure as Code) dan konfigurasi Docker + deployment Flask app menggunakan **Ansible**. 
+Tujuan: Mensimulasikan pembuatan infrastruktur yang reproducible dan version-controlled hanya dengan beberapa perintah.
 
 ## Tech Stack
-- **Terraform** (IaC provisioning VM di Hyper-v)
-- **Ansible** (configuration management + Docker deployment)
-- **Hyper-v** (hypervisor lokal windows)
-- **Docker** (container Flask)
-- **WSL2 + Windows 11** (environment testing)
+- **Terraform** v1.10+ (AWS Provider)
+- **Ansible** (playbook Docker + container)
+- **AWS** (EC2 t2.micro, Security Group, VPC) – via KodeKloud Playground
+- **Docker** + Flask app (reuse image dari [Project 1](https://github.com/seizenz7/devops-flask-ci-cd-kubernetes))
+- **KodeKloud AWS Playground** (Business Plan)
 
 ## Flowchart Diagram
 ```mermaid
-flowchart 
-    A[Terraform] --> B[Hyper-v VM]
+flowchart LR
+    A[Terraform] --> B[Provision EC2 Ubuntu]
     B --> C[Ansible Playbook]
     C --> D[Install Docker]
-    D --> E[Deploy Flask Container]
+    D --> E[Pull & Run Flask Container]
+    E --> F[App Running di Public IP]
 ```
 
 ## Prerequisites
-- Windows 11 + WSL2 (Ubuntu 22.04 atau terbaru)
-- Hyper-v terinstal dan aktif di Windows
-- Terraform & Ansible terinstal di WSL2
-- Clone GitHub repo 
-- Minimal 4 GB RAM & 50 GB disk kosong
+Akun KodeKloud Business Plan (untuk AWS)
+Terraform CLI terinstal di WSL2/Windows
+Ansible terinstal di WSL2
+GitHub repo ini sudah di-clone
 
 ---
-## Milestone 1 
+## Milestone 1: Provision EC2 via Terraform
 
+### Steps
 
 ### Screenshots (Terraform)
 
@@ -41,8 +42,9 @@ flowchart
 
 ---
 
-## Milestone 2 
+## Milestone 2: Ansible Configuration & Docker Setup
 
+### Steps
 
 ### Screenshots (Ansible)
 
@@ -54,11 +56,25 @@ flowchart
 
 ---
 
-## Milestone 3 
+## Milestone 3: Deploy Flask Application
 
+### Steps
 
 ### Screenshots 
 
+
+### Challenges & Learnings
+
+- Challenge: ...
+- Learning: ...
+
+---
+
+Milestone 4: Documentation & Evidence
+
+### Steps
+
+### Screenshots 
 
 ### Challenges & Learnings
 

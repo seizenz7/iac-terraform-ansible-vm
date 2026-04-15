@@ -1,6 +1,13 @@
-
-# Terraform secrets
-terraform/.terraform/
-terraform/terraform.tfvars
-*.tfvars
+# Terraform state (berisi sensitive data)
 *.tfstate
+*.tfstate.backup
+
+# Private key
+*.pem
+
+# Direktori internal Terraform
+.terraform/
+
+# File variable yang berisi secrets
+*.tfvars
+!terraform.tfvars.example

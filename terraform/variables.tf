@@ -1,4 +1,4 @@
-# variables.tf - Definisi variabel (versi bersih)
+# variables.tf - Definisi variabel pada terraform
 variable "aws_region" {
   description = "Region AWS Playground"
   type        = string

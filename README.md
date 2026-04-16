@@ -71,7 +71,40 @@ flowchart LR
 
 ### Screenshots (Terraform)
 
+- AWS Cloudshell
+  
+  ![kodekloud-playground-launch.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/kodekloud-playground-launch.png)
+  
+- Terraform init dan validate
+  
+  ![terraform-files-init-validate.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-files-init-validate.png)
 
+- Terraform plan
+
+  ![terraform-plan-1.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-1.png)
+  ![terraform-plan-2.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-2.png)
+  ![terraform-plan-3.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-3.png)
+  ![terraform-plan-4.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-4.png)
+
+- Terraform apply
+
+  ![terraform-apply-1.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-1.png)
+  ![terraform-apply-2.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-2.png)
+  ![terraform-apply-3.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-3.png)
+  ![terraform-apply-4.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-4.png)
+
+- IP
+
+  ![publik_ip.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/publik_ip.png)
+
+- Hasil instance vm AWS EC2
+
+  ![AWS-EC2-Instance-devops-flask-vm.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/AWS-EC2-Instance-devops-flask-vm.png)
+
+- Koneksi SSH berhasil masuk ke instance vm AWS EC2
+
+  ![ssh-success.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ssh-success.png)
+  
 ### Challenges & Learnings
 
 - Challenge: ...

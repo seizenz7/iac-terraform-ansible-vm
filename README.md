@@ -22,11 +22,11 @@ flowchart LR
 ```
 
 ## Prerequisites
-WSL2 terinstall dan aktif
-Akun KodeKloud Business Plan (untuk AWS)
-Terraform CLI terinstal di WSL2/Windows
-Ansible terinstal di WSL2
-GitHub repo ini sudah di-clone
+- WSL2 terinstall dan aktif
+- Akun KodeKloud Business Plan (untuk AWS)
+- Terraform CLI terinstal di WSL2/Windows
+- Ansible terinstal di WSL2
+- GitHub repo 
 
 ---
 ## Milestone 1: Provision EC2 via Terraform
@@ -56,14 +56,17 @@ GitHub repo ini sudah di-clone
 
   `export AWS_REGION=""`
 
-- Buat file [provider.tf]()
-- Buat file [variables.tf]()
-- Buat file [main.tf]()
+- Buat file [provider.tf](terraform/provider.tf)
+- Buat file [variables.tf](terraform/variables.tf)
+- Buat file [main.tf](terraform/main.tf)
 - Jalankan perintah terraform
 
   `terraform init`
+  
   `terraform validate`
+  
   `terraform plan`
+  
   `terraform apply -auto-approve`
 
 ### Screenshots (Terraform)

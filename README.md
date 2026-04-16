@@ -2,7 +2,7 @@
 
 ## Overview
 Proyek ini mengotomatisasi provisioning VM Ubuntu di AWS menggunakan **Terraform** (Infrastructure as Code) dan konfigurasi Docker + deployment Flask app menggunakan **Ansible**. 
-Tujuan: Mensimulasikan pembuatan infrastruktur yang reproducible dan version-controlled hanya dengan beberapa perintah.
+Tujuan: Mensimulasikan pembuatan infrastruktur yang reproducible dan version-controlled hanya dengan kode perintah.
 
 ## Tech Stack
 - **Terraform** v1.10+ (AWS Provider)
@@ -107,8 +107,13 @@ flowchart LR
   
 ### Challenges & Learnings
 
-- Challenge: ...
-- Learning: ...
+- Challenge: Membuat dynamic AMI lookup
+- Learning:
+    - Mengambil kredensial dengan AWS Cloudshell
+    - Membuat kode iac terraform untuk menyiapkan instance vm di AWS EC2 secara otomatis
+    - Membuat perintah untuk otomatis generate ssh key dan menyimpan private key di lokal untuk kemudahan akses ssh ke instance EC2
+    - Menerapkan minimal security group
+    - Menggunakan data source untuk lookup AMI terbaru secara dinamis
 
 ---
 
@@ -140,7 +145,7 @@ flowchart LR
 
 ---
 
-Milestone 4: Documentation & Evidence
+## Milestone 4: Documentation & Evidence
 
 ### Steps
 

@@ -119,15 +119,33 @@ flowchart LR
 
 ## Milestone 2: Ansible Configuration & Docker Setup
 
-### Steps
+### Steps 1 - Setup Ansible Inventory & Playbook Dasar
+- Buat folder ansible di dalam root project repo dan masuk ke dalam folder `mkdir ansible && cd ansible`
+- Buat file [inventory.ini](ansible/inventory.ini)
+- Buat file [playbook.yml](ansible/playbook.yml)
+- Jalankan perintah ansible
+
+  `ansible all -i inventory.ini -m ping` untuk test koneksi ssh ke server vm
+
+  `ansible-playbook -i inventory.ini playbook.yml --syntax-check` untuk cek syntax code apakah sudah aman/tidak ada error
+
+  `ansible-playbook -i inventory.ini playbook.yml` untuk mulai menjalankan code ansible playbook
+
+- Jika sudah sukses menjalankan ansible playbook tanpa error, masuk ke instance vm dan cek apakah docker berhasil terinstall dan berjalan
+  
+  `docker version`
+
+  `docker compose version`
+
+  `systemctl status docker`
 
 ### Screenshots (Ansible)
 
 
 ### Challenges & Learnings
 
-- Challenge: ...
-- Learning: ...
+- Challenge: Ansible-lint violation (FQCN, truthy value, trailing spaces, line-length) saat menggunakan yes/no dan short module name.
+- Learning: Menggunakan ansible.builtin.* (FQCN) dan true/false membuat kode lebih clean, future-proof, dan sesuai best practice perusahaan.
 
 ---
 

@@ -1,0 +1,118 @@
+---
+# ================================================
+# playbook.yml - Deploy Docker + Flask Container on EC2
+# ================================================
+
+- name: Deploy Docker + Flask Container on EC2
+  # Nama play ini akan muncul di output saat ansible-playbook dijalankan.
+  # Membantu mengetahui play mana yang sedang berjalan.
+
+  hosts: ec2
+  # 'hosts: ec2' → Ansible akan menargetkan semua host di grup [ec2] dari inventory.ini.
+  # Ini membuat playbook scalable (nanti bisa tambah banyak server tanpa ubah kode).
+
+  become: true
+  # 'become: yes' → jalankan semua task sebagai root (sudo). Diperlukan karena kita install package dan start service.
+
+  gather_facts: true
+  # Best practice: kumpulkan informasi server dulu (OS version, IP, dll).
+  # Membantu task-task berikutnya lebih pintar dan aman.
+  tasks:
+    # ================================================
+    # Section 0: Update apt cache
+    # ================================================
+    - name: Update apt package index (apt update)
+      # Task pertama ini menjalankan 'sudo apt update' secara idempotent.
+      # Best practice: selalu dilakukan di paling atas agar repo package fresh.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600 # Jangan update lagi kalau masih valid < 1 jam (hemat waktu)
+      tags: [apt, update]
+    # ================================================
+    # Section 1: Setup Docker Repository (Secure & Modern)
+    # ================================================
+    - name: Create /etc/apt/keyrings directory
+      # Best practice modern 2026: Docker repo pakai keyrings directory.
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Download Docker official GPG key
+      # Download GPG key resmi Docker agar aman dan terverifikasi.
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+
+    - name: Add Docker official apt repository (signed-by method)
+      # Pakai signed-by agar aman dan sesuai best practice terbaru.
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts['distribution_release'] }} stable"
+        state: present
+        filename: docker
+
+    - name: Update apt cache after adding Docker repository
+      # Explicit update cache setelah repo baru ditambahkan (penting di playground).
+      ansible.builtin.apt:
+        update_cache: true
+      tags: [apt, update]
+    # ================================================
+    # Section 2: Install Docker CE
+    # ================================================
+    - name: Install Docker CE packages (idempotent)
+      # Install paket resmi Docker (docker-ce) — lebih up-to-date dan stabil.
+      # State: present = idempotent (tidak install ulang kalau sudah ada).
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+      tags: [docker, install]
+    # ================================================
+    # Section 3: Start & Enable Docker service
+    # ================================================
+    - name: Reload systemd daemon
+      # Best practice: selalu reload systemd setelah install service baru.
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Enable and start Docker service
+      # Gunakan systemd module (rekomendasi modern Ansible).
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+      tags: [docker, service]
+    # ================================================
+    # Section 4: Docker Group & User Configuration
+    # ================================================
+    - name: Ensure docker group exists
+      # Pastikan group docker sudah ada sebelum menambahkan user (hindari race condition).
+      ansible.builtin.group:
+        name: docker
+        state: present
+      tags: [docker, group]
+    - name: Add ubuntu user to docker group
+      # Best practice: supaya nanti bisa jalankan docker command tanpa sudo.
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: true
+      tags: [docker, user]
+    # ================================================
+    # Section 5: Verification 
+    # ================================================
+    - name: Verify Docker installation
+      # Task verifikasi (tidak mengubah apa-apa).
+      ansible.builtin.command: docker --version
+      register: docker_version
+      changed_when: false
+      tags: [docker, verify]
+    - name: Print verification result
+      # Tampilkan hasil di output playbook 
+      ansible.builtin.debug:
+        msg: "✅ Docker berhasil terinstall: {{ docker_version.stdout }}"

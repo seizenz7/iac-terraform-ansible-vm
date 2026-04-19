@@ -129,7 +129,7 @@ flowchart LR
 
   `ansible-playbook -i inventory.ini playbook.yml --syntax-check` untuk cek syntax code apakah sudah aman/tidak ada error
 
-  `ansible-playbook -i inventory.ini playbook.yml` untuk mulai menjalankan code ansible playbook
+  `ansible-playbook -i inventory.ini playbook.yml` untuk menjalankan code ansible playbook
 
 - Jika sudah sukses menjalankan ansible playbook tanpa error, masuk ke instance vm dan cek apakah docker berhasil terinstall dan berjalan
   
@@ -164,28 +164,35 @@ flowchart LR
 ## Milestone 3: Deploy Flask Application
 
 ### Steps
+- Tambahkan task Flask di [playbook.yml](ansible/playbook.yml) (pull image + run container)
+- Jalankan playbook sekali lagi `ansible-playbook -i inventory.ini playbook.yml`
+- Buka browser → http://<public-ip-ec2> (Flask app berjalan di port 80)
 
 ### Screenshots 
 
+- Ansible playbook run & success (deploy flask app)
+  
+  ![ansible-playbook-deploy-success.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-deploy-success.png)
+
+  ![ansible-playbook-deploy-success-2.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-deploy-success-2.png)
+
+- Open http://<public-ip-ec2> in browser (Muncul tampilan flask app)
+
+  ![flask-app-browser.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/flask-app-browser.png)
+
+- Docker container flask app running
+
+   ![docker-container-flask-app.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/docker-container-flask-app.png)
+  
 
 ### Challenges & Learnings
 
-- Challenge: ...
-- Learning: ...
+- Challenge: Image Flask harus sudah ada di Docker Hub (dari Project 1).
+- Learning:
+    - Ansible bisa langsung pull & run container dari Docker Hub dengan module `community.docker.docker_container`.
+    - Expose port 80:5000 sudah cukup untuk demo tanpa Nginx (untuk production baru ditambah reverse proxy).
 
 ---
-
-## Milestone 4: Documentation & Evidence
-
-### Steps
-
-### Screenshots 
-
-### Challenges & Learnings
-
-- Challenge: ...
-- Learning: ...
 
 ---
 ## ***Key Takeaway Keseluruhan Project 2***
-

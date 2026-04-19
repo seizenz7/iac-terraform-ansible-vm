@@ -196,3 +196,4 @@ flowchart LR
 
 ---
 ## ***Key Takeaway Keseluruhan Project 2***
+Dalam Proyek ini saya berhasil membangun **end-to-end Infrastructure as Code pipeline** yang lengkap dan modern. Dengan menggabungkan **Terraform** untuk provisioning infrastruktur (EC2 Ubuntu) dan **Ansible** untuk konfigurasi serta deployment aplikasi (Docker + Flask container), seluruh proses menjadi 100% deklaratif, idempotent, dan reproducible. Hasilnya adalah infrastruktur yang siap pakai, mudah direproduksi, dan scalable

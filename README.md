@@ -133,14 +133,26 @@ flowchart LR
 
 - Jika sudah sukses menjalankan ansible playbook tanpa error, masuk ke instance vm dan cek apakah docker berhasil terinstall dan berjalan
   
-  `docker version`
+  `which docker`
 
-  `docker compose version`
+  `docker version`
 
   `systemctl status docker`
 
 ### Screenshots (Ansible)
 
+- Cek koneksi ssh & cek syntax
+  
+  ![ansible-playbook-check.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-check.png)
+
+- Ansible playbook run & success
+
+  ![ansible-playbook-success.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-success.png)
+
+- Verifikasi Docker installed & running
+
+  ![docker-verify.png](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/docker-verify.png)
+  
 
 ### Challenges & Learnings
 

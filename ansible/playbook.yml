@@ -91,7 +91,7 @@
     # Section 4: Docker Group & User Configuration
     # ================================================
     - name: Ensure docker group exists
-      # Pastikan group docker sudah ada sebelum menambahkan user (hindari race condition).
+      # Pastikan group docker sudah ada sebelum menambahkan user.
       ansible.builtin.group:
         name: docker
         state: present
@@ -103,11 +103,35 @@
         groups: docker
         append: true
       tags: [docker, user]
+
     # ================================================
-    # Section 5: Verification 
+    # Section 5: Deploy Flask Container (Milestone 3)
+    # ================================================
+    - name: Pull Flask image from Docker Hub (Project 1)
+      # Pull Image yang sudah di push di Project 1 (devops-flask-ci-cd-kubernetes)
+      community.docker.docker_image:
+        name: seizenz/flask-app
+        tag: latest
+        source: pull
+      tags: [flask, pull]
+
+    - name: Run Flask container
+      # Jalankan container Flask, expose port 80 di EC2 ke port 5000 di container
+      # Restart policy always = container otomatis hidup kembali kalau mati
+      community.docker.docker_container:
+        name: flask-app
+        image: seizenz/flask-app:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:5000"
+      tags: [flask, run]
+
+    # ================================================
+    # Section 6: Docker Verification 
     # ================================================
     - name: Verify Docker installation
-      # Task verifikasi (tidak mengubah apa-apa).
+      # Cek apakah Docker CLI bisa dijalankan (verifikasi dasar).
       ansible.builtin.command: docker --version
       register: docker_version
       changed_when: false
@@ -116,3 +140,37 @@
       # Tampilkan hasil di output playbook 
       ansible.builtin.debug:
         msg: "✅ Docker berhasil terinstall: {{ docker_version.stdout }}"
+
+    # ================================================
+    # Section 7: Verification Flask Container
+    # ================================================
+    - name: Verify Flask container status
+      # Cek apakah container flask-app sudah running
+      community.docker.docker_container_info:
+        name: flask-app
+      register: flask_container_info
+      tags: [flask, verify]
+
+    - name: Print Flask container status
+      debug:
+        msg: |
+          ✅ Flask Container Status:
+          Name: {{ flask_container_info.container.Name }}
+          Status: {{ flask_container_info.container.State.Status }}
+          Running: {{ flask_container_info.container.State.Running }}
+          Ports: {{ flask_container_info.container.NetworkSettings.Ports }}
+
+    - name: Test Flask health endpoint
+      # Cek apakah aplikasi Flask benar-benar responsive (endpoint /health dari Project 1)
+      ansible.builtin.uri:
+        url: "http://localhost/health"
+        method: GET
+        return_content: true
+        timeout: 10
+      register: health_check
+      tags: [flask, health]
+      
+    - name: Print Flask health check result
+      # Tampilkan hasil di output playbook
+      ansible.builtin.debug:
+        msg: "✅ Flask Health Check: {{ health_check.status }} - {{ health_check.content | default('No content') }}"

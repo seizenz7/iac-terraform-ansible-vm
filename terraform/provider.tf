@@ -18,11 +18,11 @@
 # anggota tim menggunakan versi yang kompatibel.
 # ------------------------------------------------------------------------------
 terraform {
-  required_version = ">= 1.5.0"	# Mengunci versi CLI Terraform
+  required_version = ">= 1.5.0" # Mengunci versi CLI Terraform
   required_providers {
     aws = {
-      source  = "hashicorp/aws"   # Registry resmi HashiCorp untuk AWS provider
-      version = "~> 5.0"          # Izinkan versi 5.x (minor update), lock major version
+      source  = "hashicorp/aws" # Registry resmi HashiCorp untuk AWS provider
+      version = "~> 5.0"        # Izinkan versi 5.x (minor update), lock major version
     }
   }
 }
@@ -34,7 +34,7 @@ terraform {
 # fleksibel dan bisa di-override tanpa mengubah file ini.
 # ------------------------------------------------------------------------------
 provider "aws" {
-  region = var.aws_region          # Region target deploy (e.g. ap-southeast-1)
+  region = var.aws_region # Region target deploy (e.g. ap-southeast-1)
 
   # Default tags — otomatis diterapkan ke SEMUA resource yang dibuat
   # Terraform di provider ini. Berguna untuk:
@@ -43,10 +43,10 @@ provider "aws" {
   #   - Identifikasi ownership & environment
   default_tags {
     tags = {
-      Project     = "iac-terraform-ansible-vm"  # Nama project
-      Environment = "playground"                 # Stage environment
-      ManagedBy   = "terraform"                  # Tool yang mengelola resource
-      Owner       = "seizenz7"                   # Penanggung jawab resource
+      Project     = "iac-terraform-ansible-vm" # Nama project
+      Environment = "playground"               # Stage environment
+      ManagedBy   = "terraform"                # Tool yang mengelola resource
+      Owner       = "seizenz7"                 # Penanggung jawab resource
     }
   }
 }

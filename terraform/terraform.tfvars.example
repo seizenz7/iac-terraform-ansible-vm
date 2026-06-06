@@ -1,0 +1,18 @@
+# ==============================================================================
+# CONFIGURATION - terraform.tfvars
+# ==============================================================================
+# Copy file ini menjadi `terraform.tfvars` dan sesuaikan nilainya
+# untuk mengubah konfigurasi tanpa mengedit kode Terraform.
+
+aws_region    = "us-east-1"
+instance_type = "t2.micro"
+
+# Identitas
+instance_name       = "devops-flask-vm-prod"
+ssh_key_name        = "devops-flask-key-prod"
+security_group_name = "devops-flask-sg-prod"
+
+# Jaringan & Keamanan
+app_port         = 80
+allowed_ssh_cidr = ["0.0.0.0/0"] # Ubah ke IP Anda untuk lebih aman, contoh: ["203.0.113.50/32"]
+allowed_app_cidr = ["0.0.0.0/0"]

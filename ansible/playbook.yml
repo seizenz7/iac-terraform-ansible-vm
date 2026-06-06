@@ -1,68 +1,64 @@
 ---
 # ================================================
-# playbook.yml - Deploy Docker + Flask Container on EC2
+# playbook.yml - Deploy Docker + Flask Container
 # ================================================
 
 - name: Deploy Docker + Flask Container on EC2
-  # Nama play ini akan muncul di output saat ansible-playbook dijalankan.
-  # Membantu mengetahui play mana yang sedang berjalan.
-
   hosts: ec2
-  # 'hosts: ec2' → Ansible akan menargetkan semua host di grup [ec2] dari inventory.ini.
-  # Ini membuat playbook scalable (nanti bisa tambah banyak server tanpa ubah kode).
-
   become: true
-  # 'become: yes' → jalankan semua task sebagai root (sudo). Diperlukan karena kita install package dan start service.
-
   gather_facts: true
-  # Best practice: kumpulkan informasi server dulu (OS version, IP, dll).
-  # Membantu task-task berikutnya lebih pintar dan aman.
+
+  vars:
+    # Konfigurasi User
+    docker_user: ubuntu
+
+    # Konfigurasi Flask App
+    flask_image: seizenz/flask-app:latest
+    container_name: flask-app
+    host_port: 80
+    container_port: 5000
+    health_endpoint: /health
+
   tasks:
     # ================================================
     # Section 0: Update apt cache
     # ================================================
     - name: Update apt package index (apt update)
-      # Task pertama ini menjalankan 'sudo apt update' secara idempotent.
-      # Best practice: selalu dilakukan di paling atas agar repo package fresh.
       ansible.builtin.apt:
         update_cache: true
-        cache_valid_time: 3600 # Jangan update lagi kalau masih valid < 1 jam (hemat waktu)
+        cache_valid_time: 3600
       tags: [apt, update]
+
     # ================================================
-    # Section 1: Setup Docker Repository (Secure & Modern)
+    # Section 1: Setup Docker Repository
     # ================================================
     - name: Create /etc/apt/keyrings directory
-      # Best practice modern 2026: Docker repo pakai keyrings directory.
       ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         mode: "0755"
 
     - name: Download Docker official GPG key
-      # Download GPG key resmi Docker agar aman dan terverifikasi.
       ansible.builtin.get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
         dest: /etc/apt/keyrings/docker.asc
         mode: "0644"
 
-    - name: Add Docker official apt repository (signed-by method)
-      # Pakai signed-by agar aman dan sesuai best practice terbaru.
+    - name: Add Docker official apt repository
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts['distribution_release'] }} stable"
         state: present
         filename: docker
 
     - name: Update apt cache after adding Docker repository
-      # Explicit update cache setelah repo baru ditambahkan (penting di playground).
       ansible.builtin.apt:
         update_cache: true
       tags: [apt, update]
+
     # ================================================
     # Section 2: Install Docker CE
     # ================================================
-    - name: Install Docker CE packages (idempotent)
-      # Install paket resmi Docker (docker-ce) — lebih up-to-date dan stabil.
-      # State: present = idempotent (tidak install ulang kalau sudah ada).
+    - name: Install Docker CE packages
       ansible.builtin.apt:
         name:
           - docker-ce
@@ -72,98 +68,86 @@
           - docker-compose-plugin
         state: present
       tags: [docker, install]
+
     # ================================================
     # Section 3: Start & Enable Docker service
     # ================================================
     - name: Reload systemd daemon
-      # Best practice: selalu reload systemd setelah install service baru.
       ansible.builtin.systemd:
         daemon_reload: true
 
     - name: Enable and start Docker service
-      # Gunakan systemd module (rekomendasi modern Ansible).
       ansible.builtin.systemd:
         name: docker
         state: started
         enabled: true
       tags: [docker, service]
+
     # ================================================
     # Section 4: Docker Group & User Configuration
     # ================================================
     - name: Ensure docker group exists
-      # Pastikan group docker sudah ada sebelum menambahkan user.
       ansible.builtin.group:
         name: docker
         state: present
       tags: [docker, group]
-    - name: Add ubuntu user to docker group
-      # Best practice: supaya nanti bisa jalankan docker command tanpa sudo.
+
+    - name: Add user to docker group
       ansible.builtin.user:
-        name: ubuntu
+        name: "{{ docker_user }}"
         groups: docker
         append: true
       tags: [docker, user]
 
     # ================================================
-    # Section 5: Deploy Flask Container (Milestone 3)
+    # Section 5: Deploy Flask Container
     # ================================================
-    - name: Pull Flask image from Docker Hub (Project 1)
-      # Pull Image yang sudah di push di Project 1 (devops-flask-ci-cd-kubernetes)
+    - name: Pull Flask image
       community.docker.docker_image:
-        name: seizenz/flask-app
-        tag: latest
+        name: "{{ flask_image }}"
         source: pull
       tags: [flask, pull]
 
     - name: Run Flask container
-      # Jalankan container Flask, expose port 80 di EC2 ke port 5000 di container
-      # Restart policy always = container otomatis hidup kembali kalau mati
       community.docker.docker_container:
-        name: flask-app
-        image: seizenz/flask-app:latest
+        name: "{{ container_name }}"
+        image: "{{ flask_image }}"
         state: started
         restart_policy: always
         ports:
-          - "80:5000"
+          - "{{ host_port }}:{{ container_port }}"
       tags: [flask, run]
 
     # ================================================
-    # Section 6: Docker Verification 
+    # Section 6: Verifications
     # ================================================
     - name: Verify Docker installation
-      # Cek apakah Docker CLI bisa dijalankan (verifikasi dasar).
       ansible.builtin.command: docker --version
       register: docker_version
       changed_when: false
       tags: [docker, verify]
-    - name: Print verification result
-      # Tampilkan hasil di output playbook 
+
+    - name: Print Docker verification result
       ansible.builtin.debug:
         msg: "✅ Docker berhasil terinstall: {{ docker_version.stdout }}"
 
-    # ================================================
-    # Section 7: Verification Flask Container
-    # ================================================
     - name: Verify Flask container status
-      # Cek apakah container flask-app sudah running
       community.docker.docker_container_info:
-        name: flask-app
+        name: "{{ container_name }}"
       register: flask_container_info
       tags: [flask, verify]
 
     - name: Print Flask container status
-      debug:
+      ansible.builtin.debug:
         msg: |
           ✅ Flask Container Status:
           Name: {{ flask_container_info.container.Name }}
           Status: {{ flask_container_info.container.State.Status }}
           Running: {{ flask_container_info.container.State.Running }}
-          Ports: {{ flask_container_info.container.NetworkSettings.Ports }}
 
     - name: Test Flask health endpoint
-      # Cek apakah aplikasi Flask benar-benar responsive (endpoint /health dari Project 1)
       ansible.builtin.uri:
-        url: "http://localhost/health"
+        url: "http://localhost{{ health_endpoint }}"
         method: GET
         return_content: true
         timeout: 10
@@ -171,6 +155,5 @@
       tags: [flask, health]
       
     - name: Print Flask health check result
-      # Tampilkan hasil di output playbook
       ansible.builtin.debug:
-        msg: "✅ Flask Health Check: {{ health_check.status }} - {{ health_check.content | default('No content') }}"
+        msg: "✅ Flask Health Check: {{ health_check.status }}"

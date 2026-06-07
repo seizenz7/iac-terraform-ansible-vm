@@ -195,6 +195,14 @@ export AWS_SECRET_ACCESS_KEY="YOUR_SECRET_KEY"
 export AWS_SESSION_TOKEN="YOUR_SESSION_TOKEN"   # Jika menggunakan temporary credentials
 export AWS_REGION="us-east-1"
 ```
+> [!INFO]
+> Cara Mendapatkan AWS Access Key ID, Secret Access Key, dan Session Token adalah sebagai berikut:
+> 1. Login ke AWS Management Console
+> 2. Buka terminal cloudshell di AWS console
+> 3. Jalankan perintah berikut untuk mendapatkan temporary security credentials:
+> ```bash
+> curl -s -H "Authorization: $AWS_CONTAINER_AUTHORIZATION_TOKEN" "$AWS_CONTAINER_CREDENTIALS_FULL_URI" | jq .
+> ```
 
 #### Langkah 2 — Konfigurasi Terraform
 
@@ -206,6 +214,7 @@ cp terraform.tfvars.example terraform.tfvars
 
 #### Langkah 3 — Provision Infrastruktur
 
+Masuk ke directory `terraform/` terlebih dahulu, kemudian jalankan perintah berikut:
 ```bash
 terraform init        # Download providers
 terraform validate    # Validasi syntax
@@ -251,36 +260,27 @@ terraform destroy -auto-approve   # Hapus SEMUA resource dari AWS
 
 #### Milestone 1 — Provisioning Infrastruktur (Terraform)
 
-**AWS Credentials**
-
-![AWS Credentials](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/kodekloud-playground-launch.png)
-
 **Terraform Init & Validate**
 
-![Terraform Init & Validate](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-files-init-validate.png)
+![Terraform Init & Validate](screenshots/terraform-init-validate.png)
 
 **Terraform Plan**
 
-![Terraform Plan 1](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-1.png)
-![Terraform Plan 2](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-2.png)
-![Terraform Plan 3](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-3.png)
-![Terraform Plan 4](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-plan-4.png)
+![Terraform Plan 1](screenshots/terraform-plan-1.png)
+![Terraform Plan 2](screenshots/terraform-plan-2.png)
+![Terraform Plan 3](screenshots/terraform-plan-3.png)
 
 **Terraform Apply — Infrastruktur Berhasil Dibuat**
 
-![Terraform Apply 1](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-1.png)
-![Terraform Apply 2](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-2.png)
-![Terraform Apply 3](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-3.png)
-![Terraform Apply 4](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/terraform-apply-4.png)
+![Terraform Apply](screenshots/terraform-apply.png)
 
 **Instance EC2 Aktif di AWS Console**
 
-![EC2 Instance AWS Console](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/AWS-EC2-Instance-devops-flask-vm.png)
+![EC2](screenshots/ec2-instance.png)
 
 **Output Public IP & Koneksi SSH Berhasil**
 
-![Public IP](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/publik_ip.png)
-![SSH Success](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ssh-success.png)
+![SSH Success](screenshots/ssh-success.png)
 
 ---
 
@@ -288,37 +288,33 @@ terraform destroy -auto-approve   # Hapus SEMUA resource dari AWS
 
 **Test Koneksi Ansible & Syntax Check**
 
-![Ansible Check](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-check.png)
+![Ansible Check](screenshots/ansible-check.png)
 
 **Ansible Playbook Berjalan — Docker Terinstal**
 
-![Ansible Playbook Success](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-success.png)
+![Ansible Playbook Success 1](screenshots/ansible-playbook-success-1.png)
+![Ansible Playbook Success 2](screenshots/ansible-playbook-success-2.png)
 
 **Verifikasi Docker di EC2**
 
-![Docker Verify](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/docker-verify.png)
+![Docker Verify](screenshots/docker-verify.png)
 
 ---
 
-#### Milestone 3 — Deployment Aplikasi Flask
+#### Milestone 3 — Aplikasi Flask Berhasil Di-Deploy
 
-**Ansible Deploy — Flask Container Berjalan**
+**Status Docker Container Flask App**
 
-![Ansible Deploy Success](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-deploy-success.png)
-![Ansible Deploy Success 2](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/ansible-playbook-deploy-success-2.png)
+![Docker Container Flask](screenshots/docker-container-flask-app.png)
 
 **Flask App Dapat Diakses via Public IP**
 
-![Flask App Browser](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/flask-app-browser.png)
-
-**Status Container Docker**
-
-![Docker Container Flask](https://github.com/seizenz7/iac-terraform-ansible-vm/blob/main/screenshots/docker-container-flask-app.png)
+![Flask App Browser](screenshots/flask-app-browser.png)
 
 ### ⚠ Catatan Keamanan
 
 - File `*.pem` (private key SSH) dan `*.tfstate` (berisi data sensitif) sudah dikecualikan dari Git via `.gitignore`
-- File `terraform.tfvars` juga dikecualikan; gunakan `terraform.tfvars.example` sebagai template
+- File `terraform.tfvars` juga dikecualikan; menggunakan `terraform.tfvars.example` sebagai template
 - Untuk **production**: ganti `allowed_ssh_cidr` dari `0.0.0.0/0` ke IP spesifik Anda
 - Untuk **kolaborasi tim**: gunakan *remote backend* (AWS S3 + DynamoDB) untuk menyimpan `terraform.tfstate` secara aman
 
@@ -357,7 +353,7 @@ terraform destroy -auto-approve   # Hapus SEMUA resource dari AWS
 Proyek ini dilisensikan di bawah MIT License — lihat [LICENSE](LICENSE) untuk detail.
 
 ---
-## ***Key Takeaway***
+## ***Kesimpulan***
 Dalam proyek ini saya berhasil membangun **Otomatisasi Infrastructure as Code** yang lengkap. Dengan menggabungkan **Terraform** untuk provisioning infrastruktur (EC2 Ubuntu) dan **Ansible** untuk konfigurasi serta deployment aplikasi (Docker + Flask container), seluruh proses menjadi 100% deklaratif, idempotent, dan reproducible. Kode Terraform diorganisasi dengan rapi (`compute.tf`, `security.tf`, `outputs.tf`) dan inventory Ansible di-generate secara otomatis — menghasilkan infrastruktur dasar yang siap pakai dan mudah direproduksi.
 
 ---
@@ -543,6 +539,14 @@ export AWS_SECRET_ACCESS_KEY="YOUR_SECRET_KEY"
 export AWS_SESSION_TOKEN="YOUR_SESSION_TOKEN"   # If using temporary credentials
 export AWS_REGION="us-east-1"
 ```
+> [!INFO]
+> How to get AWS Access Key ID, Secret Access Key, and Session Token:
+> 1. Log in to the AWS Management Console
+> 2. Open the CloudShell terminal in the AWS console
+> 3. Run the following command to get temporary security credentials:
+> ```bash
+> curl -s -H "Authorization: $AWS_CONTAINER_AUTHORIZATION_TOKEN" "$AWS_CONTAINER_CREDENTIALS_FULL_URI" | jq .
+> ```
 
 #### Step 2 — Configure Terraform
 
@@ -554,6 +558,7 @@ cp terraform.tfvars.example terraform.tfvars
 
 #### Step 3 — Provision Infrastructure
 
+Navigate to the `terraform/` directory first, then run the following commands:
 ```bash
 terraform init        # Download providers
 terraform validate    # Validate syntax
@@ -595,14 +600,65 @@ cd ../terraform/
 terraform destroy -auto-approve   # Remove ALL resources from AWS
 ```
 
-### 📸 Screenshots
+### 📸 Screenshots Documentation
 
-> Screenshots are identical to the [Bahasa Indonesia](#-dokumentasi-screenshot) section above. Please scroll up to view all milestone screenshots.
+#### Milestone 1 — Infrastructure Provisioning (Terraform)
+
+**Terraform Init & Validate**
+
+![Terraform Init & Validate](screenshots/terraform-init-validate.png)
+
+**Terraform Plan**
+
+![Terraform Plan 1](screenshots/terraform-plan-1.png)
+![Terraform Plan 2](screenshots/terraform-plan-2.png)
+![Terraform Plan 3](screenshots/terraform-plan-3.png)
+
+**Terraform Apply — Infrastructure Successfully Created**
+
+![Terraform Apply](screenshots/terraform-apply.png)
+
+**Active EC2 Instance in AWS Console**
+
+![EC2](screenshots/ec2-instance.png)
+
+**Public IP Output & Successful SSH Connection**
+
+![SSH Success](screenshots/ssh-success.png)
+
+---
+
+#### Milestone 2 — Server Configuration (Ansible + Docker)
+
+**Ansible Connection Test & Syntax Check**
+
+![Ansible Check](screenshots/ansible-check.png)
+
+**Ansible Playbook Running — Docker Installed**
+
+![Ansible Playbook Success 1](screenshots/ansible-playbook-success-1.png)
+![Ansible Playbook Success 2](screenshots/ansible-playbook-success-2.png)
+
+**Docker Verification in EC2**
+
+![Docker Verify](screenshots/docker-verify.png)
+
+---
+
+#### Milestone 3 — Flask App Successfully Deployed
+
+**Flask App Docker Container Status**
+
+![Docker Container Flask](screenshots/docker-container-flask-app.png)
+
+**Flask App Accessible via Public IP**
+
+![Flask App Browser](screenshots/flask-app-browser.png)
 
 ### ⚠ Security Notes
 
 - `*.pem` (SSH private key) and `*.tfstate` (contains sensitive data) are excluded from Git via `.gitignore`
-- `terraform.tfvars` is also excluded; use `terraform.tfvars.example` as a template
+- `terraform.tfvars` is also excluded; using `terraform.tfvars.example` as a template
 - For **production**: restrict `allowed_ssh_cidr` from `0.0.0.0/0` to your specific IP
 - For **team collaboration**: use a remote backend (AWS S3 + DynamoDB) to securely store `terraform.tfstate`
 
